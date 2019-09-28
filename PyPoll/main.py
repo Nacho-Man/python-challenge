@@ -44,17 +44,17 @@ with open(csvpath, newline='') as csvfile:
         a_win = ["Khan and Li", li_vote] 
     a_win = ["Khan", khan_vote] 
     if cor_vote > o_vote:      
-        a_win = ["Correy", cor_vote]
+        b_win = ["Correy", cor_vote]
     if cor_vote == o_vote:
         b_win = ["Correy and O'Tooley", cor_vote]
     b_win = ("O'Valley", o_vote)
     #Round 2
-    if a_win(1) > b_win(1):
+    if a_win[1] > b_win[1]:
         champ = a_win
-    if a_win(1) < b_win(1):
+    if a_win[1] < b_win[1]:
         champ = b_win
-    if a_win(1) == b_win(1):
-        champ = str(f"{a_win(0)} and {b_win(0)}")
+    if a_win[1] == b_win[1]:
+        champ = str(f"{a_win[0]} and {b_win[0]}")
 
 
 
@@ -65,20 +65,22 @@ with open(csvpath, newline='') as csvfile:
     li_per = 0 
 
     ###lambda format
-    ft = lambda a: "{:.3f}".format(a)
+    ft = lambda a: "{0:.3%}".format(a)
 
-    ###Percentage Vote
-    khan_per = tot / khan_vote
-    cor_per = tot / cor_vote
-    li_per = tot / li_vote
+    ###Percentage Vote0
+    per_khan = khan_vote / tot
+    per_cor = cor_vote / tot
+    per_li = li_vote /tot
+    per_o = o_vote / tot
 
     print("Election Results")
     print("------------------------------")
     print(f"Total Votes: {tot}")
     print("------------------------------")
-    print(f"Khan: {ft(khan_vote)} ({khan_vote})")
-    print(f"Correy: {ft(cor_vote)} ({cor_vote})")
-    print(f"Li: {ft(li_vote)} ({(li_vote)})")
+    print(f"Khan: {ft(per_khan)} ({khan_vote})")
+    print(f"Correy: {ft(per_cor)} ({cor_vote})")
+    print(f"Correy: {ft(per_li)} ({li_vote})")
+    print(f"Correy: {ft(per_o)} ({o_vote})")
     print("------------------------------")   
-    print(f"Winner: {champ}")
+    print(f"Winner: {champ[0]}")
     print("------------------------------")
