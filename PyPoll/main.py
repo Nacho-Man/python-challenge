@@ -84,3 +84,17 @@ with open(csvpath, newline='') as csvfile:
     print("------------------------------")   
     print(f"Winner: {champ[0]}")
     print("------------------------------")
+
+
+    # #write it to a text file
+output_path= os.path.join("PyPoll_output.txt")
+# open the file
+with open (output_path, 'w', newline='') as txtfile:
+     # write rows
+     txtwriter = txtfile.write("Election Results\n")
+     txtwriter = txtfile.write("------------------------------\n")
+     txtwriter = txtfile.write(f"Total Votes: {tot}\n")
+     txtwriter = txtfile.write(f"Total: ${total_revenue}\n")
+     txtwriter = txtfile.write(f"Average change ${round(float(average_change))}\n")
+     txtwriter = txtfile.write(f"Greatest increase in profits: {max_month} (${max_change})\n")
+     txtwriter = txtfile.write(f"Greatest decrease in profits: {min_change} (${min_change})")

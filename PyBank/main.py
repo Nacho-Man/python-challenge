@@ -1,76 +1,62 @@
 import os
 import csv
 
-csvpath = os.path.join('..', 'Resources.csv')
+# set the path
+budget_data_csv = os.path.join('..', 'Resources.csv')
 
-with open(csvpath, newline='') as csvfile:
+#Create variables
+total_revenue = 0
+month_count = 0
+current_month_revenue = 0
+prior_month_revenue = 0
+revenue_change = 0
+revenue_changes = []
+months = []
 
-    csvreader = csv.DictReader(csvfile, delimiter=',')
-    
-    
-    #variables
-    max_profit = None
-    max_loss = None
-    total = 0
-    tot_delt = 0
-    delta = 0
-    avg_delt = 0
-    last_profit = None
-    profit = 0
-    cur_month = None
-    max_month = None
-    min_month = None
+# open the budget_data.csv and read rows
+with open(budget_data_csv, newline="") as csvfile:
+   csvreader = csv.DictReader(csvfile, delimiter=",")
+   #print(csvreader)
+   
+   for row in csvreader:
+        month_count = month_count + 1
+        months.append(row["Date"])
+        current_month_revenue = int(row["Profit/Losses"])
+        total_revenue = total_revenue + current_month_revenue
+        if month_count > 1 :
+            revenue_change = current_month_revenue - prior_month_revenue
+            revenue_changes.append(revenue_change)
+        prior_month_revenue = current_month_revenue
+     
+# Month by month analysis
+sum_revenue_changes = sum(revenue_changes)
+average_change = round(sum_revenue_changes/(month_count - 1), 2)
+max_change = max(revenue_changes)
+min_change = min(revenue_changes)
+max_month_index = revenue_changes.index(max_change) + 1
+min_month_index = revenue_changes.index(min_change)
+max_month = months[max_month_index ]
+min_month = months[min_month_index ]
 
-    #the loop
-    for line in csvreader:
-        
-        profit = int(line["Profit/Losses"])
-        cur_month = line["Date"]
-        if last_profit != None:
-            delta = profit - last_profit
-
-        if last_profit != None:
-            tot_delt = tot_delt + delta
-            last_profit = profit
-        if last_profit == None:
-                
-            total = total + profit
-        if max_profit == None or max_profit < delta:
-            max_profit = delta
-            max_month = cur_month
-        if max_loss == None or max_loss > delta:
-            max_loss = delta
-            min_month = cur_month
-        last_profit = profit    
-
-
-
-        
-                      
-    #row count    
-    csvfile.seek(0)
-    row_count = sum(1 for line in csvreader)
-    row_count = row_count - 1
-
-    #simple avg
-    avg_delt = tot_delt / (row_count-1)
-
-    #format
-    f = lambda a: "{:.2f}".format(a)
-    max_profit = int(max_profit)
-    
-    #display
-    print("Financial Analysis")
-    print("----------------------------")
-    print(f"Total Months: {row_count}")
-    print(f"Total: ${total}")
-    print(f"Average Change: {f(avg_delt)}")
-    print(f"Greatest Increase in Profits: {max_month} \
-({max_profit})")
-    print(f"Greatest Decrease in Profits: {min_month} \
-({max_loss})")
-
-
-
-
-#print(data)
+# print the finanacial analysis
+print("Financial Analysis")
+print("-----------------------------")
+print(f"Total Months: {month_count} ")
+print(f"Total Revenue: ${total_revenue}")
+print(f"Average Revenue Change: ${average_change}")
+print(f"Greatest Increase in profits: {max_month} (${max_change})")
+print(f"Greatest Decrease in profits: {min_month} (${min_change})")
+# write it to a text file
+# 
+# #write it to a text file
+output_path= os.path.join("PyBank_output.txt")
+# open the file
+with open (output_path, 'w', newline='') as txtfile:
+     # write rows
+     txtwriter = txtfile.write("Financial Analysis\n")
+     txtwriter = txtfile.write("-----------------------\n")
+     txtwriter = txtfile.write(f"Total Months: {month_count}\n")
+     txtwriter = txtfile.write(f"Total: ${total_revenue}\n")
+     txtwriter = txtfile.write(f"Average change ${round(float(average_change))}\n")
+     txtwriter = txtfile.write(f"Greatest increase in profits: {max_month} (${max_change})\n")
+     txtwriter = txtfile.write(f"Greatest decrease in profits: {min_change} (${min_change})")
